@@ -1,0 +1,191 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #000010, #000);
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.space-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.space {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: twinkle 3s infinite alternate;
+}
+
+/* Animation scintillante */
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to   { opacity: 1; }
+}
+
+.sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, #ffcc33, #ff6600);
+  border-radius: 50%;
+  box-shadow: 0 0 40px 20px rgba(255,200,50,0.8);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Planètes */
+.mercury { width: 10px; height: 10px; background: gray; }
+.venus   { width: 18px; height: 18px; background: orange; }
+.earth   { width: 20px; height: 20px; background: deepskyblue; }
+.mars    { width: 16px; height: 16px; background: red; }
+.jupiter { width: 35px; height: 35px; background: peru; }
+.saturn  { width: 30px; height: 30px; background: khaki; }
+.uranus  { width: 26px; height: 26px; background: lightblue; }
+.neptune { width: 24px; height: 24px; background: royalblue; }
+
+/* --- Lune --- */
+.moon{
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+.saturn {
+  width: 30px;
+  height: 30px;
+  background: khaki;
+  border-radius: 50%;
+  position: relative; /* important pour que .ring soit positionné par rapport à la planète */
+  z-index: 2;         /* assure que la planète reste au-dessus des anneaux si on le souhaite */
+}
+
+/* Anneaux (élément interne) */
+.saturn .ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;              /* diamètre extérieur des anneaux */
+  height: 28px;             /* épaisseur */
+  transform: translate(-50%, -50%) rotate(18deg);
+  border-radius: 50%;
+  background: conic-gradient(
+    rgba(255,255,220,0.35),
+    rgba(220,200,150,0.25),
+    rgba(200,170,120,0.18)
+  );
+  box-shadow: 0 0 10px rgba(200,170,120,0.06) inset;
+  pointer-events: none;     /* laisse le clic atteindre la planète */
+  z-index: 1;               /* derrière la planète (puisque .saturn a z-index:2) */
+  filter: blur(0.3px);
+  mix-blend-mode: screen;   /* optionnel, donne un rendu plus lumineux */
+}
+
+/* Option : ajouter un anneau externe plus fin (aspect multi-anneaux) */
+.saturn .ring::after {
+  content: "";
+  position: absolute;
+  inset: 7px 6px;           /* intérieur pour créer un anneau plus fin autour */
+  border-radius: 50%;
+  background: rgba(255,255,210,0.12);
+  pointer-events: none;
+}
+
+/* Zone d'information */
+#info-panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 15px;
+  width: 330px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  z-index: 10;
+}
+
+#info-panel h2 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+}
+
+#info-panel p {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 10px 0;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+#speed-range,
+#zoom-range {
+  width: 120px;
+}
+
+/* Container pour les boutons (sous les sliders) */
+.controls-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: flex-start;
+}
+
+/* Style des boutons pour qu'ils soient cohérents avec le panneau info */
+.control-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  transition: transform .12s ease, background .12s ease;
+}
+.control-btn:hover { transform: translateY(-2px); }
+.control-btn:active { transform: translateY(0); }
+
+/* Etats visuels */
+.control-btn.off {
+  background: rgba(255,0,0,0.12);
+  border-color: rgba(255,0,0,0.25);
+  color: #ffdddd;
+}
+.control-btn.paused {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.18);
+}
