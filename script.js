@@ -304,40 +304,49 @@ toggleSystemBtn.addEventListener("click", () => {
 });
 
 // trail
-/* --- TRAJECTOIRES DYNAMIQUES DES PLANÈTES --- */
-function createTrail(planet, delay = 15, trailLength = 280) {
-  const trail = [];
+let trailsEnabled = true;
+let trailInterval = null;
 
-  setInterval(() => {
-    // récupérer position de la planète sur l'écran
-    const rect = planet.getBoundingClientRect();
+// Crée une trace derrière chaque planète
+function createTrail() {
+  if (!trailsEnabled) return;
 
-    // créer un point
-    const dot = document.createElement("div");
-    dot.className = "trail";
+  planets.forEach(p => {
+    const rect = p.getBoundingClientRect();
 
-    // placer le point exactement à la position de la planète
-    dot.style.left = rect.left + rect.width / 2 + "px";
-    dot.style.top = rect.top + rect.height / 2 + "px";
+    const trail = document.createElement("div");
+    trail.className = "trail";
 
-    document.body.appendChild(dot);
-    trail.push(dot);
+    trail.style.left = rect.left + rect.width/2 + "px";
+    trail.style.top  = rect.top + rect.height/2 + "px";
 
-    // supprimer l'ancien point pour garder un cercle quasi complet
-    if (trail.length > trailLength) {
-      const old = trail.shift();
-      old.remove();
-    }
+    document.body.appendChild(trail);
 
-  }, delay);
+    setTimeout(() => {
+      trail.style.transition = "opacity 1.5s";
+      trail.style.opacity = 0;
+      setTimeout(() => trail.remove(), 1500);
+    }, 200);
+  });
 }
 
-/* --- ACTIVER LES TRAJECTOIRES POUR CHAQUE PLANÈTE --- */
-createTrail(document.querySelector('.mercury'), 15, 160);
-createTrail(document.querySelector('.venus'),   15, 200);
-createTrail(document.querySelector('.earth'),   15, 260);
-createTrail(document.querySelector('.mars'),    15, 290);
-createTrail(document.querySelector('.jupiter'), 15, 340);
-createTrail(document.querySelector('.saturn'),  15, 380);
-createTrail(document.querySelector('.uranus'),  15, 420);
-createTrail(document.querySelector('.neptune'), 15, 460);
+// Lancer les trajectoires
+trailInterval = setInterval(createTrail, 80);
+
+// Bouton ON/OFF
+const toggleTrailsBtn = document.getElementById("toggle-trails");
+
+toggleTrailsBtn.addEventListener("click", () => {
+  trailsEnabled = !trailsEnabled;
+
+  if (trailsEnabled) {
+    toggleTrailsBtn.textContent = "➰ Trajectoires : ON";
+    toggleTrailsBtn.classList.remove("off");
+    trailInterval = setInterval(createTrail, 80);
+  } else {
+    toggleTrailsBtn.textContent = "➰ Trajectoires : OFF";
+    toggleTrailsBtn.classList.add("off");
+    clearInterval(trailInterval);
+    document.querySelectorAll(".trail").forEach(t => t.remove());
+  }
+});
