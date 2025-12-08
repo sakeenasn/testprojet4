@@ -305,38 +305,53 @@ toggleSystemBtn.addEventListener("click", () => {
 
 
 // --- Création des orbites ---
-const orbits = []; // tableau pour stocker les cercles
+
+// --- DISTANCES EXACTES DES PLANÈTES AU SOLEIL ---
+const planetDistances = {
+  mercury: 100,
+  venus: 150,
+  earth: 210,
+  mars: 260,
+  jupiter: 330,
+  saturn: 400,
+  uranus: 470,
+  neptune: 540
+};
+
+// --- CRÉATION DES ORBITES FIXES ---
+const orbits = [];
+const extraSpace = 10; // espace supplémentaire pour bien voir le cercle
 
 planets.forEach(p => {
   const orbit = document.createElement("div");
   orbit.className = "orbit";
-  const distance = Math.hypot(
-    p.offsetLeft - space.clientWidth/2,
-    p.offsetTop - space.clientHeight/2
-  );
-  orbit.style.width = distance*2 + "px";
-  orbit.style.height = distance*2 + "px";
+
+  const distance = planetDistances[p.classList[1]]; // récupère la distance de la planète
+  orbit.style.width = (distance*2 + extraSpace) + "px";
+  orbit.style.height = (distance*2 + extraSpace) + "px";
   orbit.style.position = "absolute";
   orbit.style.border = "1px dashed rgba(255,255,255,0.3)";
   orbit.style.borderRadius = "50%";
   orbit.style.top = "50%";
   orbit.style.left = "50%";
   orbit.style.transform = "translate(-50%, -50%)";
-  orbit.style.pointerEvents = "none"; // laisse cliquer sur les planètes
-  orbit.style.display = "none"; // par défaut, caché
+  orbit.style.pointerEvents = "none"; // ne bloque pas le clic sur les planètes
+  orbit.style.display = "none"; // caché par défaut
+
   space.appendChild(orbit);
   orbits.push(orbit);
 });
 
-// --- Bouton pour activer / désactiver les orbites ---
+// --- BOUTON POUR ACTIVER / DÉSACTIVER LES ORBITES ---
 const toggleOrbitsBtn = document.getElementById("toggle-orbits");
 let orbitsVisible = false;
 
-toggleOrbitsBtn.addEventListener("click", () => {
+toggleOrbitsBtn.addEventListener("click", e => {
+  e.stopPropagation(); // empêche de déclencher le clic sur les planètes
   orbitsVisible = !orbitsVisible;
+
   orbits.forEach(o => o.style.display = orbitsVisible ? "block" : "none");
-  
-  // Mise à jour du bouton
+
   toggleOrbitsBtn.textContent = orbitsVisible ? "💫 Orbites : ON" : "💫 Orbites : OFF";
   toggleOrbitsBtn.classList.toggle("off", !orbitsVisible);
 });
