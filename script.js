@@ -303,50 +303,40 @@ toggleSystemBtn.addEventListener("click", () => {
   }
 });
 
-// trail
-let trailsEnabled = true;
-let trailInterval = null;
 
-// Crée une trace derrière chaque planète
-function createTrail() {
-  if (!trailsEnabled) return;
+// --- Création des orbites ---
+const orbits = []; // tableau pour stocker les cercles
 
-  planets.forEach(p => {
-    const rect = p.getBoundingClientRect();
+planets.forEach(p => {
+  const orbit = document.createElement("div");
+  orbit.className = "orbit";
+  const distance = Math.hypot(
+    p.offsetLeft - space.clientWidth/2,
+    p.offsetTop - space.clientHeight/2
+  );
+  orbit.style.width = distance*2 + "px";
+  orbit.style.height = distance*2 + "px";
+  orbit.style.position = "absolute";
+  orbit.style.border = "1px dashed rgba(255,255,255,0.3)";
+  orbit.style.borderRadius = "50%";
+  orbit.style.top = "50%";
+  orbit.style.left = "50%";
+  orbit.style.transform = "translate(-50%, -50%)";
+  orbit.style.pointerEvents = "none"; // laisse cliquer sur les planètes
+  orbit.style.display = "none"; // par défaut, caché
+  space.appendChild(orbit);
+  orbits.push(orbit);
+});
 
-    const trail = document.createElement("div");
-    trail.className = "trail";
+// --- Bouton pour activer / désactiver les orbites ---
+const toggleOrbitsBtn = document.getElementById("toggle-orbits");
+let orbitsVisible = false;
 
-    trail.style.left = rect.left + rect.width/2 + "px";
-    trail.style.top  = rect.top + rect.height/2 + "px";
-
-    document.body.appendChild(trail);
-
-    setTimeout(() => {
-      trail.style.transition = "opacity 1.5s";
-      trail.style.opacity = 0;
-      setTimeout(() => trail.remove(), 1500);
-    }, 200);
-  });
-}
-
-// Lancer les trajectoires
-trailInterval = setInterval(createTrail, 80);
-
-// Bouton ON/OFF
-const toggleTrailsBtn = document.getElementById("toggle-trails");
-
-toggleTrailsBtn.addEventListener("click", () => {
-  trailsEnabled = !trailsEnabled;
-
-  if (trailsEnabled) {
-    toggleTrailsBtn.textContent = "➰ Trajectoires : ON";
-    toggleTrailsBtn.classList.remove("off");
-    trailInterval = setInterval(createTrail, 80);
-  } else {
-    toggleTrailsBtn.textContent = "➰ Trajectoires : OFF";
-    toggleTrailsBtn.classList.add("off");
-    clearInterval(trailInterval);
-    document.querySelectorAll(".trail").forEach(t => t.remove());
-  }
+toggleOrbitsBtn.addEventListener("click", () => {
+  orbitsVisible = !orbitsVisible;
+  orbits.forEach(o => o.style.display = orbitsVisible ? "block" : "none");
+  
+  // Mise à jour du bouton
+  toggleOrbitsBtn.textContent = orbitsVisible ? "💫 Orbites : ON" : "💫 Orbites : OFF";
+  toggleOrbitsBtn.classList.toggle("off", !orbitsVisible);
 });
