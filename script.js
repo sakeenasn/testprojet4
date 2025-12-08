@@ -302,3 +302,42 @@ toggleSystemBtn.addEventListener("click", () => {
     toggleSystemBtn.classList.remove("paused");
   }
 });
+
+// trail
+/* --- TRAJECTOIRES DYNAMIQUES DES PLANÈTES --- */
+function createTrail(planet, delay = 15, trailLength = 280) {
+  const trail = [];
+
+  setInterval(() => {
+    // récupérer position de la planète sur l'écran
+    const rect = planet.getBoundingClientRect();
+
+    // créer un point
+    const dot = document.createElement("div");
+    dot.className = "trail";
+
+    // placer le point exactement à la position de la planète
+    dot.style.left = rect.left + rect.width / 2 + "px";
+    dot.style.top = rect.top + rect.height / 2 + "px";
+
+    document.body.appendChild(dot);
+    trail.push(dot);
+
+    // supprimer l'ancien point pour garder un cercle quasi complet
+    if (trail.length > trailLength) {
+      const old = trail.shift();
+      old.remove();
+    }
+
+  }, delay);
+}
+
+/* --- ACTIVER LES TRAJECTOIRES POUR CHAQUE PLANÈTE --- */
+createTrail(document.querySelector('.mercury'), 15, 160);
+createTrail(document.querySelector('.venus'),   15, 200);
+createTrail(document.querySelector('.earth'),   15, 260);
+createTrail(document.querySelector('.mars'),    15, 290);
+createTrail(document.querySelector('.jupiter'), 15, 340);
+createTrail(document.querySelector('.saturn'),  15, 380);
+createTrail(document.querySelector('.uranus'),  15, 420);
+createTrail(document.querySelector('.neptune'), 15, 460);
