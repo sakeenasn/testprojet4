@@ -189,3 +189,15 @@ body {
   background: rgba(255,255,255,0.06);
   border-color: rgba(255,255,255,0.18);
 }
+
+
+/*TRAIL*/
+.trail {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(1px);
+}
