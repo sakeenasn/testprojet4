@@ -318,26 +318,33 @@ const planetDistances = {
   neptune: 540
 };
 
-// --- CRÉATION DES ORBITES FIXES ---
+// --- TABLEAU POUR STOCKER LES ORBITES ---
 const orbits = [];
-const extraSpace = 10; // espace supplémentaire pour bien voir le cercle
+const extraSpace = 10; // espace supplémentaire pour que la planète soit visible
 
 planets.forEach(p => {
+  const planetClass = p.classList[1]; // ex: 'mercury'
+  const distance = planetDistances[planetClass];
+
+  // Récupérer la taille de la planète
+  const planetSize = parseInt(getComputedStyle(p).width);
+  const radius = distance + planetSize/2 + extraSpace; // rayon exact
+
+  // Créer l'orbite
   const orbit = document.createElement("div");
   orbit.className = "orbit";
-
-  const distance = planetDistances[p.classList[1]]; // récupère la distance de la planète
-  orbit.style.width = (distance*2 + extraSpace) + "px";
-  orbit.style.height = (distance*2 + extraSpace) + "px";
+  orbit.style.width = radius*2 + "px";
+  orbit.style.height = radius*2 + "px";
   orbit.style.position = "absolute";
   orbit.style.border = "1px dashed rgba(255,255,255,0.3)";
   orbit.style.borderRadius = "50%";
   orbit.style.top = "50%";
   orbit.style.left = "50%";
   orbit.style.transform = "translate(-50%, -50%)";
-  orbit.style.pointerEvents = "none"; // ne bloque pas le clic sur les planètes
+  orbit.style.pointerEvents = "none"; // laisse cliquer sur les planètes
   orbit.style.display = "none"; // caché par défaut
 
+  // Ajouter au conteneur spatial
   space.appendChild(orbit);
   orbits.push(orbit);
 });
@@ -347,7 +354,7 @@ const toggleOrbitsBtn = document.getElementById("toggle-orbits");
 let orbitsVisible = false;
 
 toggleOrbitsBtn.addEventListener("click", e => {
-  e.stopPropagation(); // empêche de déclencher le clic sur les planètes
+  e.stopPropagation(); // empêche le clic de remonter aux planètes
   orbitsVisible = !orbitsVisible;
 
   orbits.forEach(o => o.style.display = orbitsVisible ? "block" : "none");
